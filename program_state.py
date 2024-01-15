@@ -8,9 +8,8 @@ class __State:
         # options related
         ## game related
         self.played_game = None
-
-        # tetris experiment related
-        phases_iterator = None
+        self.recording_on = False
+       
 
         # time related
         self.start_time = None

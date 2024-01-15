@@ -18,7 +18,6 @@ class MenuView(tk.Frame):
         self.game_entry = ttk.Entry(self, width=30, textvariable=self.game_name)
         self.game_button = ttk.Button(self, text="Game", command=self.start_game)
 
-        self.tetris_experiment = ttk.Button(self, text="Tetris Experiment", command=self.start_tetris_experiment)
 
         self.arrange()
 
@@ -32,7 +31,6 @@ class MenuView(tk.Frame):
         self.game_entry.grid(row=4, column=0, sticky=tk.W)
         self.game_button.grid(row=4, column=1, sticky=tk.W)        
 
-        self.tetris_experiment.grid(row=5, column=0, sticky=tk.W)
 
         self.pack(anchor=tk.CENTER)
 

@@ -1,7 +1,9 @@
 import socket
 import os
 import warnings
+from tkinter import messagebox
 
+from program_state import program_state
 from utils.custom_printing import print_as_red
 from utils.Timer import Timer
 warnings.filterwarnings("ignore")
@@ -10,8 +12,7 @@ IP = "127.0.0.1"
 PORT = 1000
 TIMEOUT = 5 # in seconds
 
-def listen_udp(filename, dirname="./Datasets/"):
-    os.makedirs(os.path.dirname(dirname), exist_ok=True)
+def listen_udp(dirname, filename):
     file = open(os.path.join(dirname, f"{filename}.csv"), "wb+")
 
     try:
@@ -27,7 +28,7 @@ def listen_udp(filename, dirname="./Datasets/"):
         # timer = Timer()
 
         # Acquisition loop
-        while True:
+        while program_state.recording_on:
             number_of_bytes_received, _ = udp_socket.recvfrom_into(receive_buffer_byte)
             # timer.print_stopwatch()
             if number_of_bytes_received > 0:
@@ -36,10 +37,10 @@ def listen_udp(filename, dirname="./Datasets/"):
 
     except Exception as ex:
         print_as_red(f"Error during UDP data acquisition: {ex}")
+        messagebox.showerror("Error", f"Error during UDP data acquisition: {ex}")
     finally:
         file.close()
-        print("\nAcquisition has terminated. Press ENTER to continue.")
-        input()
+        print("\nAcquisition has terminated")
 
 
 
