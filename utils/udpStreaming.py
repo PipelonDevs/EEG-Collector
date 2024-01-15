@@ -2,8 +2,8 @@ import socket
 import os
 import warnings
 
-from custom_printing import print_as_red
-from Timer import Timer
+from utils.custom_printing import print_as_red
+from utils.Timer import Timer
 warnings.filterwarnings("ignore")
 
 IP = "127.0.0.1"
@@ -23,12 +23,13 @@ def listen_udp(filename, dirname="./Datasets/"):
         udp_socket.bind(end_point)
         receive_buffer_byte = bytearray(1024)
 
+        print(f"Listening on {end_point}")
+        # timer = Timer()
+
         # Acquisition loop
-        print(f"\rListening on {end_point}")
-        timer = Timer()
         while True:
             number_of_bytes_received, _ = udp_socket.recvfrom_into(receive_buffer_byte)
-            timer.print_stopwatch()
+            # timer.print_stopwatch()
             if number_of_bytes_received > 0:
                 message_byte = receive_buffer_byte[:number_of_bytes_received]
                 file.write(message_byte)
