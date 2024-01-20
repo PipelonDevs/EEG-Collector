@@ -4,8 +4,6 @@ import warnings
 from tkinter import messagebox
 
 from program_state import program_state
-from utils.custom_printing import print_as_red
-from utils.Timer import Timer
 warnings.filterwarnings("ignore")
 
 IP = "127.0.0.1"
@@ -13,6 +11,7 @@ PORT = 1000
 TIMEOUT = 5 # in seconds
 
 def listen_udp(dirname, filename):
+    os.makedirs(dirname, exist_ok=True)
     file = open(os.path.join(dirname, f"{filename}.csv"), "wb+")
 
     try:
@@ -36,7 +35,6 @@ def listen_udp(dirname, filename):
                 file.write(message_byte)
 
     except Exception as ex:
-        print_as_red(f"Error during UDP data acquisition: {ex}")
         messagebox.showerror("Error", f"Error during UDP data acquisition: {ex}")
     finally:
         file.close()
