@@ -10,6 +10,7 @@ from datetime import datetime
 import os
 
 from consts import DEVICES_PATH, GAME_DATASET_PATH, BASE_DATASET_PATH
+from views.AnnotationFragment import AnnotationFragment
 
 class GameView(tk.Frame):
     def __init__(self, master) -> None:
@@ -131,6 +132,8 @@ class GameView(tk.Frame):
         full_path = os.path.join(dirname, filename)
 
         program_state.saving_strategy.push(data=self.annotations, url=f"{full_path}.json")
+        self.annotations_fragment = AnnotationFragment(self.master, f"{full_path}.json")
+        self.annotations_fragment.arrange()
 
         self.recording_thread = threading.Thread(target=listen_udp, args=(full_path,))
         program_state.recording_on = True
@@ -153,3 +156,11 @@ class GameView(tk.Frame):
 
         duration = datetime.now() - datetime.strptime(self.started_at, "%Y-%m-%d_%H-%M")
         messagebox.showinfo("Success", f"Recording stopped. Duration: {duration}")
+
+
+    def destroy(self) -> None:
+        try:
+            self.annotations_fragment.destroy()
+        except:
+            print("Annotations not created")
+        super().destroy()
