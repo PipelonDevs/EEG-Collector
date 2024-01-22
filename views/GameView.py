@@ -116,6 +116,7 @@ class GameView(tk.Frame):
                 device=Device(
                     **program_state.saving_strategy.pull(url=self.device_path)
                 ),
+                duration=0,
                 notes= self.notes.get()
             ),
             data=[]

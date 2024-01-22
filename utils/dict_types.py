@@ -24,6 +24,7 @@ class Annotation(dict):
 @pdataclass
 class Meta(dict):
     device: Device = field(default_factory=Device)
+    duration: int = field(default=0)
     notes: str = field(default="")
 
 @pdataclass

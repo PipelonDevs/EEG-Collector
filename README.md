@@ -29,6 +29,7 @@ The `meta` section contains the following fields:
 - `displayable_rows`: dictionary with data You want to visualize:
     - key: name of channel (e.g "alpa", "beta mid") 
     - value: list of rows 
+- `duration`: The length of the recording in collected samples.
 - `notes`: Any additional notes or comments about the recording or the subject.
 
 ### Data
