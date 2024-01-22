@@ -6,7 +6,9 @@ import time
 from tkinter import ttk, messagebox
 from consts import DEVICES_PATH
 from program_state import program_state
+
 from utils.paths import list_files
+from utils.dict_types import Device
 #     "meta": {
         # "device": "unicorn",
         # "unit_name": "unicorn e23",
@@ -77,15 +79,14 @@ class ManageDevicesView(tk.Frame):
     def on_select(self, event):
         device_name = self.dropdown.get()
         path = os.path.join(DEVICES_PATH, device_name)
-        with open(path, "r") as f:
-            device = json.load(f)
+        device = Device(**program_state.saving_strategy.pull(url=path))
 
         self.manage_device_label["text"] = f"Manage {device_name}"
         
-        self.device_name.set(device["device"])
-        self.unit_name.set(device["unit_name"])
-        self.clock_rate.set(device["clock_rate"])
-        self.channels.set(device["channels"])
+        self.device_name.set(device.device_name)
+        self.unit_name.set(device.unit_name)
+        self.clock_rate.set(device.clock_rate)
+        self.channels.set(device.channels)
 
 
     def save(self):
@@ -105,21 +106,21 @@ class ManageDevicesView(tk.Frame):
             messagebox.showerror("Error", "Clock rate and channels must be integers.")
             return
 
-        new_device = {
-            "device": device_name,
-            "unit_name": unit_name,
-            "clock_rate": clock_rate,
-            "channels": channels,
-            "displayable_rows": {}
-        }
+
+        new_device = Device(
+            device_name=device_name,
+            unit_name=unit_name,
+            clock_rate=clock_rate,
+            channels=channels,
+            displayable_rows={}
+        )
 
         path = os.path.join(DEVICES_PATH, f"{device_name}.json")
         if os.path.exists(path):
             if not messagebox.askyesno("Warning", "Device already exists. Do you want to overwrite it?"):
                 return
         
-        with open(path, "w+") as f:
-            json.dump(new_device, f, indent=4)
+        program_state.saving_strategy.push(data=new_device, url=path)
 
         messagebox.showinfo("Success", "Device saved.")
         

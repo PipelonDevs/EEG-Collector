@@ -11,7 +11,7 @@ class AnnotationView(tk.Frame):
         super().__init__(master)
 
         master.withdraw() # we don't want a full GUI, so keep the root window from appearing
-        filename = askopenfilename(initialdir="Datasets/GameDatasets", title="Select dataset to annotate", filetypes=(("csv files", "*.csv"), ("all files", "*.*"))) 
+        filename = askopenfilename(initialdir="Datasets/GameDatasets", title="Select dataset to annotate", filetypes=(("json files", "*.json"), ("all files", "*.*"))) 
         master.deiconify() # make the root window appear again
         print(filename)
         

@@ -10,9 +10,8 @@ IP = "127.0.0.1"
 PORT = 1000
 TIMEOUT = 5 # in seconds
 
-def listen_udp(dirname, filename):
-    os.makedirs(dirname, exist_ok=True)
-    file = open(os.path.join(dirname, f"{filename}.csv"), "wb+")
+def listen_udp(full_path):
+    file = open(f"{full_path}.csv", "wb+")
 
     try:
         end_point = (IP, PORT)

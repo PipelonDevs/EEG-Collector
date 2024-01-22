@@ -1,0 +1,13 @@
+{
+    "meta": {
+        "device": {
+            "name": "dupa",
+            "unit_name": "aa",
+            "clock_rate": 10,
+            "channels": 10,
+            "displayable_rows": {}
+        },
+        "notes": ""
+    },
+    "data": []
+}

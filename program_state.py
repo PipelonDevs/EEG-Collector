@@ -1,3 +1,6 @@
+from storage import ISavingStrategy, SaveToFile
+
+
 class __State:
     def __init__(self):
         # general
@@ -10,6 +13,8 @@ class __State:
         self.played_game = None
         self.recording_on = False
        
+       # Settings
+        self.saving_strategy: ISavingStrategy = SaveToFile()
 
         # time related
         self.start_time = None

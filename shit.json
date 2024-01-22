@@ -1,0 +1,15 @@
+{
+    "meta": {
+        "device": {
+            "name": "unicorn",
+            "unit_name": "unicorn",
+            "clock_rate": 120,
+            "channels": 16,
+            "displayable_rows": {
+                "beta": [1,2,3]
+            }
+        },
+        "notes": "joł"
+    },
+    "data": []
+}

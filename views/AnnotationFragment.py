@@ -5,7 +5,7 @@ import tkinter as tk
 from program_state import program_state
 from RangeSlider.RangeSlider import RangeSliderH
 
-from utils.Annotations import Annotations 
+from utils.dict_types import Annotations 
 
 
 
@@ -39,7 +39,7 @@ class AnnotationFragment(tk.Frame):
         super().__init__(master)
         self.recording_path = recording_path
 
-        self.annotations = Annotations(recording_path)
+        self.annotations = Annotations(**program_state.saving_strategy.pull(url=recording_path))
         user_id, game_name, date, time = get_metadata_from_path(recording_path)
 
         self.user_id_label = ttk.Label(self, text=f"User ID: {user_id}")
@@ -47,7 +47,7 @@ class AnnotationFragment(tk.Frame):
         self.date_label = ttk.Label(self, text=f"Date: {date}")
         self.time_label = ttk.Label(self, text=f"Time: {time}")
 
-        self.device_label = ttk.Label(self, text=f"Device: {self.annotations.meta.device}: {self.annotations.meta.unit_name}")
+        self.device_label = ttk.Label(self, text=f"Device: {self.annotations.meta.device.device_name}: {self.annotations.meta.device.unit_name}")
         self.new_annotation_button = ttk.Button(self, text="New annotation", command=self.new_annotation)
 
         self.arrange()

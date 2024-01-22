@@ -2,6 +2,7 @@ import time
 from tkinter import ttk, messagebox
 import tkinter as tk
 from program_state import program_state
+from utils.dict_types import Annotations, Device, Meta
 from utils.paths import list_files
 from utils.udpStreaming import listen_udp
 import threading
@@ -30,6 +31,10 @@ class GameView(tk.Frame):
         self.devices_dropdown = ttk.Combobox(self, width=20, state="readonly")
         self.devices_dropdown["values"] = list_files(DEVICES_PATH, "json")
 
+        self.notes = tk.StringVar()
+        self.notes_label = ttk.Label(self, text="Notes: ")
+        self.notes_entry = ttk.Entry(self, width=20, textvariable=self.notes)
+
         self.record_button = ttk.Button(self, text="Start recording",  style="TButton", command=self.start_recording)
         program_state.recording_on = False
         self.arrange()
@@ -53,6 +58,8 @@ class GameView(tk.Frame):
 
         self.device_label.grid(row=4, column=0, sticky=tk.W, pady=5)
         self.devices_dropdown.grid(row=4, column=1, sticky=tk.W, pady=10)
+
+        self.notes_label.grid(row=5, column=0, columnspan=2, sticky=tk.W, pady=5)
 
         self.record_button.grid(row=5, column=0, sticky=tk.W, pady=10)
 
@@ -100,17 +107,32 @@ class GameView(tk.Frame):
 
         program_state.user_id = self.user_id.get()
         program_state.played_game = self.game_name.get()
-        program_state.device = self.devices_dropdown.get()
-        
+
+        self.device_path = os.path.join(DEVICES_PATH, self.devices_dropdown.get())
+        # program_state.device = self.devices_dropdown.get()
+        self.annotations = Annotations(
+            meta = Meta(
+                device=Device(
+                    **program_state.saving_strategy.pull(url=self.device_path)
+                ),
+                notes= self.notes.get()
+            ),
+            data=[]
+        )
+
         self.started_at = datetime.now().strftime("%Y-%m-%d_%H-%M")
         filename = f"{program_state.user_id}_{program_state.played_game}_{self.started_at}"
         dirname = self.create_dir(dir_name=filename[:filename.rfind("_")]) # remove _HH:MM from directory name
 
-        print('filename: ', filename)
         self.style.configure("TButton", foreground='red')
         self.record_button.configure(text="Stop recording", command=self.ask_stop_recording)
-        
-        self.recording_thread = threading.Thread(target=listen_udp, args=(dirname, filename))
+
+        os.makedirs(dirname, exist_ok=True)
+        full_path = os.path.join(dirname, filename)
+
+        program_state.saving_strategy.push(data=self.annotations, url=f"{full_path}.json")
+
+        self.recording_thread = threading.Thread(target=listen_udp, args=(full_path,))
         program_state.recording_on = True
         self.recording_thread.start()
 
